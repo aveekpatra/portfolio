@@ -147,12 +147,12 @@ export function LexyosDevices({ sizes = '(min-width: 1024px) 400px, 80vw' }) {
 
 // A flat field for a device to stand in. Its corners are set by whoever
 // places it, so they can follow the card around it.
-export function Stage({ tone = 'light', className, children }) {
+export function Stage({ tone = 'light', fill, className, children }) {
   return (
     <div
       className={clsx(
         'relative isolate overflow-hidden',
-        tone === 'dark' ? 'bg-[#1f1f1f]' : 'bg-white',
+        fill ?? (tone === 'dark' ? 'bg-[#1f1f1f]' : 'bg-white'),
         className,
       )}
     >
@@ -227,12 +227,16 @@ export function SiteShot({ src, alt, tone, className }) {
 
 const sites = { Aturno: '/shots/aturno.jpg', Renko: '/shots/renko.jpg' }
 
+// A soft pastel behind each app on a light card, in place of white.
+const pastels = { Speek: 'bg-[#e6e6fb]', Lexyos: 'bg-[#fbe8dc]' }
+
 // The picture at the top of a home page card.
 export function ProductMedia({ name, tone = 'light', className }) {
   if (name === 'Speek' || name === 'Lexyos') {
     return (
       <Stage
         tone={tone}
+        fill={tone === 'light' ? pastels[name] : undefined}
         className={clsx('aspect-[16/10] rounded-[12px]', className)}
       >
         {name === 'Speek' ? <MacScene app="Speek" /> : <LexyosScene />}

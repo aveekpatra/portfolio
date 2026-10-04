@@ -17,6 +17,11 @@ const macs = {
     src: '/devices/lexyos-mac.webp',
     alt: 'Lexyos on the Mac, with the inbox, projects and a day timeline',
   },
+  // A website, not a Mac app: the Renko page fills the screen instead.
+  Renko: {
+    src: '/devices/renko-mac.webp',
+    alt: 'The Renko website on a Mac',
+  },
 }
 
 export function MacBook({
@@ -225,21 +230,25 @@ export function SiteShot({ src, alt, tone, className }) {
   )
 }
 
-const sites = { Aturno: '/shots/aturno.jpg', Renko: '/shots/renko.jpg' }
+const sites = { Aturno: '/shots/aturno.jpg' }
 
-// A soft pastel behind each app on a light card, in place of white.
-const pastels = { Speek: 'bg-[#e6e6fb]', Lexyos: 'bg-[#fbe8dc]' }
+// A soft colour wash behind each app on a light card, one hue per app.
+const pastels = {
+  Speek: 'bg-linear-to-br from-[#e2efff] via-[#b8d6ff] to-[#8bbcfa]',
+  Lexyos: 'bg-linear-to-br from-[#e0f7e7] via-[#b5e9c6] to-[#86d7a3]',
+  Renko: 'bg-linear-to-br from-[#fff0dc] via-[#ffd7aa] to-[#fdbb7c]',
+}
 
 // The picture at the top of a home page card.
 export function ProductMedia({ name, tone = 'light', className }) {
-  if (name === 'Speek' || name === 'Lexyos') {
+  if (macs[name]) {
     return (
       <Stage
         tone={tone}
         fill={tone === 'light' ? pastels[name] : undefined}
         className={clsx('aspect-[16/10] rounded-[12px]', className)}
       >
-        {name === 'Speek' ? <MacScene app="Speek" /> : <LexyosScene />}
+        {name === 'Lexyos' ? <LexyosScene /> : <MacScene app={name} />}
       </Stage>
     )
   }

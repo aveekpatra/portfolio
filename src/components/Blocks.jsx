@@ -139,7 +139,7 @@ export function Panel({ tone, id, className, children }) {
       id={id}
       data-nav={tone}
       className={clsx(
-        'mx-3 scroll-mt-4 rounded-[24px] px-4 py-20 sm:rounded-[28px] sm:px-8 sm:py-24',
+        'mx-3 scroll-mt-4 rounded-[24px] p-4 sm:rounded-[28px] sm:p-8 lg:py-24',
         tone === 'dark' ? 'bg-night' : 'bg-white',
         className,
       )}

@@ -1,0 +1,162 @@
+@import 'tailwindcss';
+
+@theme {
+  --text-xs: 0.8125rem;
+  --text-xs--line-height: 1.5rem;
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.5rem;
+  --text-base: 1rem;
+  --text-base--line-height: 1.75rem;
+  --text-lg: 1.125rem;
+  --text-lg--line-height: 1.75rem;
+  --text-xl: 1.25rem;
+  --text-xl--line-height: 2rem;
+  --text-2xl: 1.5rem;
+  --text-2xl--line-height: 2rem;
+  --text-3xl: 1.875rem;
+  --text-3xl--line-height: 2.25rem;
+  --text-4xl: 2rem;
+  --text-4xl--line-height: 2.5rem;
+  --text-5xl: 3rem;
+  --text-5xl--line-height: 3.5rem;
+  --text-6xl: 3.75rem;
+  --text-6xl--line-height: 1;
+  --text-7xl: 4.5rem;
+  --text-7xl--line-height: 1;
+  --text-8xl: 6rem;
+  --text-8xl--line-height: 1;
+  --text-9xl: 8rem;
+  --text-9xl--line-height: 1;
+
+  /* The pill shell: warm-neutral paper, near-black ink, white cards. */
+  --color-paper: #efefef;
+  --color-ink: #232323;
+  --color-mute: #707070;
+  --color-faint: #9d9d9d;
+  --color-hush: #b4b4b4;
+  --color-line: #e3e3e3;
+  --color-night: #232323;
+  --color-night-card: #2a2a2a;
+  --color-night-line: #3a3a3a;
+  --color-night-mute: #9d9d9d;
+  --ease-smooth: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-nav: cubic-bezier(0.7, 0, 0, 1);
+  --ease-power3: cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+@theme inline {
+  --font-geist: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/*
+  Illustration motion. Parts of a drawing drift up and back on their own
+  timing, dashed guides creep along, and rings ripple out. A drawing only
+  moves while it is on screen, and not at all for people who ask for less motion.
+*/
+@keyframes iso-float {
+  50% {
+    transform: translateY(var(--iso-y, -3px));
+  }
+}
+
+@keyframes iso-march {
+  to {
+    stroke-dashoffset: -11;
+  }
+}
+
+@keyframes clock-tick {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes clock-ring {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  10%,
+  30%,
+  50%,
+  70% {
+    transform: rotate(-13deg);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: rotate(13deg);
+  }
+}
+
+@keyframes ripple {
+  0% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  44%,
+  100% {
+    opacity: 0;
+    transform: scale(2.35);
+  }
+}
+
+@layer base {
+  .iso-float {
+    animation: iso-float var(--iso-dur, 4s) var(--ease-power3) infinite;
+    animation-delay: var(--iso-delay, 0s);
+  }
+
+  .iso-march {
+    animation: iso-march var(--iso-dur, 2.4s) linear infinite;
+  }
+
+  .iso-ripple {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: ripple 2.05s ease-out infinite;
+    animation-delay: var(--iso-delay, 0s);
+  }
+
+  [data-iso-play='false'] :is(.iso-float, .iso-march, .iso-ripple) {
+    animation-play-state: paused;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :is(.iso-float, .iso-march, .iso-ripple) {
+      animation: none;
+    }
+  }
+}
+
+/*
+  Tailwind v4 changed the default border color to `currentcolor`.
+  Keep the v3 default so existing borders look the same.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
+
+/* A tap or click should not leave a box or ring behind. Keyboard focus still shows one. */
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+}

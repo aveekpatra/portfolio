@@ -585,6 +585,29 @@ export function Label({ x, y, z = 0, size = 5, children }) {
   )
 }
 
+// A closed path through the corners of a flat shape, each corner softened
+// like the nav mark: a curve that starts `d` along both edges and pulls toward
+// the corner, so sharp tips stay sharp. `at` places a point in the drawing.
+function softPath(list, d, at) {
+  let n = list.length
+  let xy = (p) =>
+    at(p)
+      .map((v) => +v.toFixed(2))
+      .join(' ')
+  let corners = list.map((b, i) => {
+    let cut = (p) => {
+      let len = Math.hypot(p[0] - b[0], p[1] - b[1])
+      let s = Math.min(d, len * 0.45) / len
+      return [b[0] + (p[0] - b[0]) * s, b[1] + (p[1] - b[1]) * s]
+    }
+    let pull = (p) => [p[0] + (b[0] - p[0]) * 0.8, p[1] + (b[1] - p[1]) * 0.8]
+    let p1 = cut(list[(i + n - 1) % n])
+    let p2 = cut(list[(i + 1) % n])
+    return `${i ? 'L' : 'M'}${xy(p1)}C${xy(pull(p1))} ${xy(pull(p2))} ${xy(p2)}`
+  })
+  return corners.join('') + 'Z'
+}
+
 // The AP mark as a solid block, standing on the floor. The faces that carry
 // the letters are inked, so the mark reads at a glance; the rest is paper.
 export function MarkBlock({ x, y, z = 0, k = 3, depth = 14, hole }) {
@@ -592,86 +615,83 @@ export function MarkBlock({ x, y, z = 0, k = 3, depth = 14, hole }) {
   let X = (mx) => x + mx * k
   let Z = (my) => z + (14 - my) * k
   let y1 = y + depth
-  let face = (list, Y) => pts(list.map(([mx, my]) => [X(mx), Y, Z(my)]))
+  let front = ([mx, my]) => iso(X(mx), y1, Z(my))
+  let face = (list, d = 1) => softPath(list, d, front)
+  let side = (list) =>
+    pts(list.map(([mx, my, d]) => [X(mx), d ? y1 : y, Z(my)]))
   let line = { stroke: t.stroke, strokeWidth: 0.8, strokeLinejoin: 'round' }
   return (
     <g>
-      {/* A: the upright side, then its face. */}
+      {/* A: the leaning side, then its face. */}
       <polygon
         {...line}
         fill={t.right}
-        points={pts([
-          [X(10), y, Z(0)],
-          [X(10), y1, Z(0)],
-          [X(10), y1, Z(14)],
-          [X(10), y, Z(14)],
+        points={side([
+          [10, 0],
+          [10, 0, 1],
+          [14, 14, 1],
+          [14, 14],
         ])}
       />
-      <polygon
+      <path
         fill={t.accent}
-        points={face(
-          [
-            [0, 14],
-            [10, 0],
-            [10, 14],
-          ],
-          y1,
-        )}
+        d={face([
+          [0, 14],
+          [10, 0],
+          [14, 14],
+        ])}
       />
-      <polygon
+      <path
         fill={hole}
-        points={face(
+        d={face(
           [
-            [5.75, 8.7],
-            [8.4, 8.7],
-            [8.4, 12.4],
+            [6.24, 8.02],
+            [10.63, 8.02],
+            [11.88, 12.4],
             [3.11, 12.4],
           ],
-          y1,
+          0.7,
         )}
       />
       {/* P: the top, the slope, then its face. */}
       <polygon
         {...line}
         fill={t.top}
-        points={pts([
-          [X(11.4), y, Z(0)],
-          [X(21.4), y, Z(0)],
-          [X(21.4), y1, Z(0)],
-          [X(11.4), y1, Z(0)],
+        points={side([
+          [11.4, 0],
+          [25.4, 0],
+          [25.4, 0, 1],
+          [11.4, 0, 1],
         ])}
       />
       <polygon
         {...line}
         fill={t.right}
-        points={pts([
-          [X(21.4), y, Z(0)],
-          [X(11.4), y, Z(14)],
-          [X(11.4), y1, Z(14)],
-          [X(21.4), y1, Z(0)],
+        points={side([
+          [25.4, 0],
+          [15.4, 14],
+          [15.4, 14, 1],
+          [25.4, 0, 1],
         ])}
       />
-      <polygon
+      <path
         fill={t.accent}
-        points={face(
-          [
-            [11.4, 0],
-            [21.4, 0],
-            [11.4, 14],
-          ],
-          y1,
-        )}
+        d={face([
+          [11.4, 0],
+          [25.4, 0],
+          [15.4, 14],
+        ])}
       />
-      <polygon
+      <path
         fill={hole}
-        points={face(
+        d={face(
           [
-            [13, 1.6],
-            [18.29, 1.6],
-            [15.65, 5.3],
-            [13, 5.3],
+            [13.52, 1.6],
+            [22.29, 1.6],
+            [19.16, 5.98],
+            [14.77, 5.98],
           ],
-          y1,
+          0.7,
         )}
       />
     </g>
@@ -1203,7 +1223,7 @@ export function WorkshopArt(props) {
       </Float>
 
       {/* Front right: the mark itself, made solid. */}
-      <MarkBlock x={100} y={90} k={4.4} depth={14} hole="#efefef" />
+      <MarkBlock x={94} y={90} k={4.2} depth={14} hole="#efefef" />
 
       {/* Far right: pillars, and plates floating over their footprint. */}
       {[

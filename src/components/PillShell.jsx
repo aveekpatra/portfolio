@@ -9,20 +9,20 @@ import { Reveal, RevealItem } from '@/components/Reveal'
 import { external } from '@/lib/external'
 import { profile } from '@/lib/profile'
 
-// The AP mark: two thin-walled right triangles, the second one upside down.
-// The A keeps only the lower half of its hole, under a solid peak. The P keeps
-// only the upper half of its hole, a bowl over a solid stem.
+// The AP mark: two thin-walled triangles that lean together, the second one
+// upside down. The A keeps only the lower half of its hole, under a solid
+// peak. The P keeps only the upper half, a bowl over a point.
 export function Mark(props) {
   return (
     <svg
-      viewBox="0 0 21.4 14"
+      viewBox="0 0 25.4 14"
       fill="currentColor"
       fillRule="evenodd"
       aria-hidden="true"
       {...props}
     >
-      <path d="M0.486 14A0.25 0.25 0 0 1 0.282 13.605L9.547 0.635A0.25 0.25 0 0 1 10 0.78L10 13.75A0.25 0.25 0 0 1 9.75 14ZM5.675 8.805A0.25 0.25 0 0 1 5.879 8.7L8.15 8.7A0.25 0.25 0 0 1 8.4 8.95L8.4 12.15A0.25 0.25 0 0 1 8.15 12.4L3.595 12.4A0.25 0.25 0 0 1 3.392 12.005Z" />
-      <path d="M20.914 0A0.25 0.25 0 0 1 21.118 0.395L11.853 13.365A0.25 0.25 0 0 1 11.4 13.22L11.4 0.25A0.25 0.25 0 0 1 11.65 0ZM13 1.85A0.25 0.25 0 0 1 13.25 1.6L17.805 1.6A0.25 0.25 0 0 1 18.008 1.995L15.725 5.195A0.25 0.25 0 0 1 15.521 5.3L13.25 5.3A0.25 0.25 0 0 1 13 5.05Z" />
+      <path d="M1 14C0.2 14 0.116 13.837 0.581 13.186L9.419 0.814C9.884 0.163 10.055 0.192 10.275 0.962L13.725 13.038C13.945 13.808 13.8 14 13 14ZM5.833 8.59C6.159 8.134 6.38 8.02 6.94 8.02L9.93 8.02C10.49 8.02 10.668 8.155 10.822 8.693L11.688 11.727C11.842 12.265 11.74 12.4 11.18 12.4L3.81 12.4C3.25 12.4 3.191 12.286 3.517 11.83Z" />
+      <path d="M24.4 0C25.2 0 25.284 0.163 24.819 0.814L15.981 13.186C15.516 13.837 15.345 13.808 15.125 13.038L11.675 0.962C11.455 0.192 11.6 0 12.4 0ZM19.567 5.41C19.241 5.866 19.02 5.98 18.46 5.98L15.47 5.98C14.91 5.98 14.732 5.845 14.578 5.307L13.712 2.273C13.558 1.735 13.66 1.6 14.22 1.6L21.59 1.6C22.15 1.6 22.209 1.714 21.883 2.17Z" />
     </svg>
   )
 }
@@ -100,7 +100,7 @@ export function PillHeader() {
           aria-label="Aveek Patra, home"
           className={clsx(pill, card, shadow, 'w-[42px] justify-center')}
         >
-          <Mark className="h-[13px] w-[19.9px] flex-none" />
+          <Mark className="h-[12px] w-[21.8px] flex-none" />
         </Link>
         <nav
           className={clsx(

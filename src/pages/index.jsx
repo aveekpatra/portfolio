@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { useState, useSyncExternalStore } from 'react'
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import clsx from 'clsx'
 
 import {
@@ -108,17 +108,10 @@ function PragueClock({ time }) {
   )
 }
 
-// A soft, rounded Czech flag. It tilts a little when you point at it.
+// A soft, rounded Czech flag.
 function CzechFlag({ className }) {
   return (
-    <svg
-      viewBox="0 0 22 20"
-      aria-hidden="true"
-      className={clsx(
-        'transition-transform duration-500 ease-smooth hover:-rotate-[8deg]',
-        className,
-      )}
-    >
+    <svg viewBox="0 0 22 20" aria-hidden="true" className={className}>
       <defs>
         <clipPath id="cz-flag">
           <rect width="22" height="20" rx="4.2" />
@@ -141,6 +134,72 @@ function CzechFlag({ className }) {
         />
       </g>
     </svg>
+  )
+}
+
+// Prague and its flag. Point at it and the flag gives way to beer, the
+// castle and a tram, one after another for as long as you stay. On a touch
+// screen, a tap starts and stops it. The emoji are from Microsoft's Fluent
+// Emoji (MIT).
+const pragueThings = ['beer-mug', 'castle', 'tram-car']
+
+function Prague() {
+  let [step, setStep] = useState(-1)
+  let timer = useRef(null)
+
+  function start() {
+    if (timer.current) return
+    setStep(0)
+    timer.current = setInterval(
+      () => setStep((s) => (s + 1) % pragueThings.length),
+      700,
+    )
+  }
+  function stop() {
+    clearInterval(timer.current)
+    timer.current = null
+    setStep(-1)
+  }
+  useEffect(() => () => clearInterval(timer.current), [])
+
+  // The one leaving shrinks away quickly; the next one pops in just after.
+  let pop = (on) =>
+    clsx(
+      'transition-[opacity,scale,rotate] motion-reduce:transition-none',
+      on
+        ? 'scale-100 rotate-0 opacity-100 delay-75 duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]'
+        : 'scale-50 -rotate-12 opacity-0 duration-150 ease-in',
+    )
+  return (
+    <span
+      className="whitespace-nowrap"
+      onPointerEnter={(e) => e.pointerType === 'mouse' && start()}
+      onPointerLeave={(e) => e.pointerType === 'mouse' && stop()}
+      onClick={() => (timer.current ? stop() : start())}
+    >
+      <span className="relative top-[0.14em] mr-[0.28em] inline-flex">
+        <span className="relative inline-block h-[0.86em] w-[0.95em]">
+          <CzechFlag
+            className={clsx('absolute inset-0 size-full', pop(step < 0))}
+          />
+          {pragueThings.map((name, i) => (
+            <Image
+              key={name}
+              src={`/emoji/${name}.png`}
+              alt=""
+              width={256}
+              height={256}
+              sizes="32px"
+              className={clsx(
+                'absolute top-1/2 left-1/2 size-[1.3em] max-w-none -translate-x-1/2 -translate-y-1/2',
+                pop(step === i),
+              )}
+            />
+          ))}
+        </span>
+      </span>
+      Prague
+    </span>
   )
 }
 
@@ -282,10 +341,7 @@ function Hero() {
           className="mt-7 space-y-5 text-[19px] leading-[1.55] tracking-[-0.01em] sm:text-[21px]"
         >
           <RevealItem as="p">
-            I&apos;m Aveek Patra, a software engineer in{' '}
-            <Named icon={<CzechFlag className="h-[0.86em] w-[0.95em]" />}>
-              Prague
-            </Named>
+            I&apos;m Aveek Patra, a software engineer in <Prague />
             {time ? (
               <>
                 , where it&apos;s{' '}

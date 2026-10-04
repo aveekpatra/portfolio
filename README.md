@@ -46,4 +46,4 @@ Images are served from GitHub Pages rather than Vercel. On each push to `master`
 
 ## License
 
-The site started from Spotlight, a [Tailwind UI](https://tailwindui.com) template, and has since been rewritten. What remains of the template is under the [Tailwind UI license](LICENSE.md). The Mac mockups use Apple's product bezels under the Apple Design Resources license.
+The site started from Spotlight, a [Tailwind UI](https://tailwindui.com) template, and has since been rewritten. What remains of the template is under the [Tailwind UI license](LICENSE.md). The Mac mockups use Apple's product bezels under the Apple Design Resources license. The emoji in `public/emoji/` are from Microsoft's [Fluent Emoji](https://github.com/microsoft/fluentui-emoji) (MIT, Copyright (c) Microsoft Corporation).

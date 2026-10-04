@@ -419,8 +419,8 @@ function RightNow() {
 
 const sideProjects = [
   { project: byName.Speek, cta: 'View on GitHub' },
-  { project: byName.Renko, cta: 'Visit renko.app' },
   { project: byName.Lexyos, cta: 'Visit lexyos.com' },
+  { project: byName.Renko, cta: 'Visit renko.app' },
 ]
 
 function OnTheSide() {
